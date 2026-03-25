@@ -47,8 +47,7 @@ CreateIniDirs <- function(IniDir){
 
 #' Setup of directories for a simulation project
 #'
-#' @param ProjectName Name of the project [string]
-#' @param SectionName Name of the section [string], no slash at the end, e.g. "WHEAT"
+#' @param ProjectName Name of the project [string] eg. "MaizeEvaluation"
 #' @param Trial Name of the trial [string] if Trial is not empty, a subdirectory with the name of the trial will be created in the data and ini directories
 #' @param ModelDrive Drive letter for the model [string]
 #' @param OutputDrive Drive letter for the output [string]
@@ -57,14 +56,14 @@ CreateIniDirs <- function(IniDir){
 #' @export
 #'
 #' @examples Setupirs("TestProject", "Trial1")
-SetupDirs <- function(ProjectName, SectionName="", TrialName="", ModelDrive="Q:", OutputDrive="P:"){
+SetupDirs <- function(ProjectName, TrialName="", ModelDrive="Q:", OutputDrive="P:"){
 
   # create the main directory for the simulation project
 
-  mainIniDir <- paste(ModelDrive, SectionName, "ini", ProjectName, TrialName, sep = "/")
+  mainIniDir <- paste(ModelDrive, ProjectName,  "ini", TrialName, sep = "/")
   dir.create(mainIniDir, showWarnings = FALSE)
 
-  mainDataDir <- paste(ModelDrive, SectionName, "data", ProjectName, TrialName, sep = "/")
+  mainDataDir <- paste(ModelDrive, ProjectName,  "data",  TrialName, sep = "/")
 
   dir.create(mainDataDir, showWarnings = FALSE, recursive = TRUE)
 
@@ -76,7 +75,7 @@ SetupDirs <- function(ProjectName, SectionName="", TrialName="", ModelDrive="Q:"
   OptIniDir <- NewIniDirs$OptIniDir
   CtrlFileDir <- NewIniDirs$CtrlFileDir
   IniFileDir <- NewIniDirs$IniFileDir
-    OutFileDir <- paste(OutputDrive, SectionName, ProjectName, TrialName, sep = "/")
+  OutFileDir <- paste(OutputDrive, ProjectName, TrialName, sep = "/")
   dir.create(OutFileDir, showWarnings = FALSE)
   return(list(ParIniDir = ParIniDir, StateIniDir = StateIniDir,
               OptIniDir = OptIniDir, CtrlFileDir = CtrlFileDir,
