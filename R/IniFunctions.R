@@ -49,23 +49,22 @@ CreateIniDirs <- function(IniDir){
 #'
 #' @param ProjectName Name of the project [string] eg. "MaizeEvaluation"
 #' @param Trial Name of the trial [string] if Trial is not empty, a subdirectory with the name of the trial will be created in the data and ini directories
-#' @param ModelDrive Drive letter for the model [string]
-#' @param OutputDrive Drive letter for the output [string]
+#' @param ModelDrive Drive letter for the model, default is "Q:" [string]
+#' @param OutputDrive Drive letter for the output, default is "P:" [string]
+#' @param CreateDirs logical, if TRUE, the directories will be created if they do not exist [logical]
 #'
 #' @returns list with directories for the project
 #' @export
 #'
 #' @examples Setupirs("TestProject", "Trial1")
-SetupDirs <- function(ProjectName, TrialName="", ModelDrive="Q:", OutputDrive="P:"){
+SetupDirs <- function(ProjectName, TrialName="", ModelDrive="Q:", OutputDrive="P:", CreateDirs=TRUE){
 
   # create the main directory for the simulation project
 
   mainIniDir <- paste(ModelDrive, ProjectName,  "ini", TrialName, sep = "/")
-  dir.create(mainIniDir, showWarnings = FALSE)
 
   mainDataDir <- paste(ModelDrive, ProjectName,  "data",  TrialName, sep = "/")
 
-  dir.create(mainDataDir, showWarnings = FALSE, recursive = TRUE)
 
   NewIniDirsName <-  mainIniDir#paste(mainIniDir, "IniFiles", sep = "/")
 
@@ -76,7 +75,11 @@ SetupDirs <- function(ProjectName, TrialName="", ModelDrive="Q:", OutputDrive="P
   CtrlFileDir <- NewIniDirs$CtrlFileDir
   IniFileDir <- NewIniDirs$IniFileDir
   OutFileDir <- paste(OutputDrive, ProjectName, TrialName, sep = "/")
-  dir.create(OutFileDir, showWarnings = FALSE)
+  if (CreateDirs) {
+    dir.create(mainIniDir, showWarnings = FALSE)
+    dir.create(mainDataDir, showWarnings = FALSE, recursive = TRUE)
+    dir.create(OutFileDir, showWarnings = FALSE)
+  }
   return(list(ParIniDir = ParIniDir, StateIniDir = StateIniDir,
               OptIniDir = OptIniDir, CtrlFileDir = CtrlFileDir,
               IniFileDir = IniFileDir, OutFileDir = OutFileDir,
