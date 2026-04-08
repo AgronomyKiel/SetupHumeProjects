@@ -22,9 +22,9 @@ CtrlFileDir <- "CtrlFiles"
 
 #' function for creating directories
 #'
-#' @param IniDir
+#' @param IniDir Name of the Dirctory, where the subdirectories for the ini files should be created [string]
 #'
-#' @returns
+#' @returns list with the paths of the created directories
 #' @export
 #'
 CreateIniDirs <- function(IniDir){
@@ -51,12 +51,12 @@ CreateIniDirs <- function(IniDir){
 #' @param Trial Name of the trial [string] if Trial is not empty, a subdirectory with the name of the trial will be created in the data and ini directories
 #' @param ModelDrive Drive letter for the model, default is "Q:" [string]
 #' @param OutputDrive Drive letter for the output, default is "P:" [string]
-#' @param CreateDirs logical, if TRUE, the directories will be created if they do not exist [logical]
+#' @param CreateDirs logical, if TRUE, the directories for data and output will be created if they do not exist [logical]
 #'
 #' @returns list with directories for the project
 #' @export
 #'
-#' @examples Setupirs("TestProject", "Trial1")
+#' @examples SetupDirs("TestProject", "Trial1")
 SetupDirs <- function(ProjectName, TrialName="", ModelDrive="Q:", OutputDrive="P:", CreateDirs=TRUE){
 
   # create the main directory for the simulation project
@@ -76,7 +76,7 @@ SetupDirs <- function(ProjectName, TrialName="", ModelDrive="Q:", OutputDrive="P
   IniFileDir <- NewIniDirs$IniFileDir
   OutFileDir <- paste(OutputDrive, ProjectName, TrialName, sep = "/")
   if (CreateDirs) {
-    dir.create(mainIniDir, showWarnings = FALSE)
+    # dir.create(mainIniDir, showWarnings = FALSE)
     dir.create(mainDataDir, showWarnings = FALSE, recursive = TRUE)
     dir.create(OutFileDir, showWarnings = FALSE)
   }
@@ -96,10 +96,10 @@ SetupDirs <- function(ProjectName, TrialName="", ModelDrive="Q:", OutputDrive="P
 #' @param FirstHarvestYear First harvest year of the simulation [integer]
 #' @param LastHarvestYear Last harvest year of the simulation [integer]
 #' @param Wintercrop logical, is the crop a winter crop? [logical]
-#' @param SimStart start date of the simulation "YYYY-MM-DD"
-#' @param SimEnd end date of the simulation "YYYY-MM-DD"
-#' @param Sowingdate sowing date of the crop "YYYY-MM-DD"
-#' @param HarvestDate harvest date of the crop "YYYY-MM-DD"
+#' @param SimStart start date of the simulation "YYYY-MM-DD" [string]
+#' @param SimEnd end date of the simulation "YYYY-MM-DD" [string]
+#' @param SowingDate sowing date of the crop "YYYY-MM-DD" [string]
+#' @param HarvestDate harvest date of the crop "YYYY-MM-DD" [string]
 #'
 #' @returns list with time arrays for simulations in Excel year format
 #' @export
@@ -108,20 +108,20 @@ SetTimeArrays <- function(FirstHarvestYear,
                           Wintercrop=TRUE,
                           SimStart,
                           SimEnd,
-                          Sowingdate,
+                          SowingDate,
                           HarvestDate){
 
 SimStart <- as.Date(SimStart)
 SimEnd <- as.Date(SimEnd)
-Sowingdate <- as.Date(Sowingdate)
+SowingDate <- as.Date(SowingDate)
 HarvestDate <- as.Date(HarvestDate)
 
 Wintercrops <- rep(Wintercrop, length(FirstHarvestYear:LastHarvestYear))
 
 
 SowingDateYear <- ifelse (Wintercrop, FirstHarvestYear-1, FirstHarvestYear)
-SowingDateMonth <- month(Sowingdate)
-SowingDateDay <- day(Sowingdate)
+SowingDateMonth <- month(SowingDate)
+SowingDateDay <- day(SowingDate)
 SowingDate <- as.Date(paste0(as.character(SowingDateYear),"-",as.character(SowingDateMonth),"-",
                              as.character(SowingDateDay)))
 
@@ -166,7 +166,7 @@ HarvestDates <- as.Date(HarvestDates)
 # the array of start times for the simulations in date format
 
 
-StartTimes <- as.Date(paste(as.character(ifelse(Wintercrops==TRUE, SimYears-1, SimYears)),
+StartTimes <- as.Date(paste(as.character(ifelse(Wintercrops, SimYears-1, SimYears)),
                             format(SimStart, format="%m-%d"),sep = "-"))
 
 ExcelStartTimes <- as.numeric(StartTimes -as.Date(0, origin="1899-12-30", tz='UTC'))
